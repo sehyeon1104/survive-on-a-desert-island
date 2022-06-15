@@ -5,7 +5,7 @@
 #include <io.h>
 #include <fcntl.h>
 #include <string>
-
+#include <vector>	
 static int hp = 1;
 using namespace std;
 void Die();
@@ -19,4 +19,4 @@ void ASituation();
 void BSituation();
 void ItemSet();
 void SelectItem();
-#pragma once
+
