@@ -7,7 +7,10 @@
 #include <string>
 #include <vector>	
 #include <map>  
-#include <time.h>   
+#include <time.h>   	
+#include <mmsystem.h>
+#include <Digitalv.h>
+
 enum {
     BLACK,
     DARK_BLUE,
@@ -27,17 +30,21 @@ enum {
     WHITE,
 };
 
-static int hp = 1;
+static int hp = 0;
 using namespace std;
 void DSituation();
 void Die();
+void easynormalhard();
 void Escape();
 void textcolor(int foreground, int background);
 void Randomtlqkf();
+void Issick();
+void LastSituation();
 void Randomelse();
 void MainScreen();
 void Startprint();
 void Story();
+void Playingbgm();
 void Setting();
 void ASituation();
 void BSituation();

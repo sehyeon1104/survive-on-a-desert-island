@@ -1,4 +1,5 @@
 ﻿#include "survive.h"
+#pragma comment(lib,"winmm.lib")
 
 int num = 0;
 using namespace std;
@@ -87,11 +88,11 @@ void SelectItem()
 	Sleep(2000);
 	cout << "어떤 아이템을 선택하시겠습니까 ? " << endl;
 	Sleep(1000);
-	Stringtochar(80, "성냥 , 칼 , 물 1L , 의약품 , 무인도에서 살아남기 책");
+	Stringtochar(80, "성냥 , 물 1L , 의약품 , 무인도에서 살아남기 책");
 	while (true)
 	{
 		getline(cin, itemselect);
-		if (itemselect == "성냥" || itemselect == "칼" || itemselect == "물 1L" || itemselect == "의약품" || itemselect == "무인도에서 살아남기 책")
+		if (itemselect == "성냥" || itemselect == "물 1L" || itemselect == "의약품" || itemselect == "무인도에서 살아남기 책")
 		{
 			cout << "당신은 " << itemselect << "을 선택하였습니다" << endl;
 			item.push_back(itemselect);
@@ -138,6 +139,7 @@ void textcolor(int foreground, int background)
 
 void Die()
 {
+
 	_setmode(_fileno(stdout), _O_U8TEXT);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
 	wcout << L"          ██████╗  █████╗ ███╗   ███╗███████╗     ██████╗ ██╗   ██╗███████╗██████╗	" << endl;
@@ -221,14 +223,69 @@ void MainScreen()
 	case 4:
 		DSituation();
 		break;
+	case 5:
+		LastSituation();
 	default:
 
 		break;
 	}
 }
+void easynormalhard()
+{
+	int b = 0;
+	while (true)
+	{
+		cout << "어떤 모드로 하시겠습니까?" << endl;
+		cout << "1: Easy 2: Normal 3: Hard" << endl;
+		int a = _getch();
+		if (a == 49)
+		{
+			hp = 3;
+		}
+		else if (a == 50)
+		{
+			hp = 2;
+		}
+		else if (a == 51)
+		{
+			hp = 1;
+		}
+		else
+		{
+			if (b >= 50 && b < 100)
+			{
+				Randomtlqkf();
+				b++;
+				continue;
+			}
+			else if (b == 100)
+			{
+				cout << "넌 걍 하지마라 ㅋㅋ";
+				exit(0);
+			}
+			Randomelse();
+			b++;
+			continue;
+		}
+		break;
+	}
+	Story();
+}
+MCI_PLAY_PARMS Playbgm;
+MCI_OPEN_PARMS Openbgm;
+UINT dwID;
+void Playingbgm()
+{
 
+	Openbgm.lpstrElementName = L"evolution.mp3";
+	Openbgm.lpstrDeviceType = L"mpegvideo"; // wav파일은 waveaudio
+	mciSendCommand(0, MCI_OPEN, MCI_OPEN_ELEMENT | MCI_OPEN_TYPE, (DWORD)(LPVOID)&Openbgm);
+	dwID = Openbgm.wDeviceID;
+	mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&Playbgm);
+}
 void Startprint()
 {
+
 	int num;
 	_setmode(_fileno(stdout), _O_U16TEXT);
 	textcolor(rand() % 14, BLACK);
@@ -246,19 +303,21 @@ void Startprint()
 	textcolor(WHITE, BLACK);
 	_setmode(_fileno(stdout), _O_TEXT);
 	int a = 0;
+	Playingbgm();
 	while (true)
 	{
 		cout << "1: 게임 시작 2: 게임 나가기" << endl;
-		cin >> num;
-		switch (num)
+		int a = _getch();
+		if (a == 49)
 		{
-		case 1:
-			Story();
-			break;
-		case 2:
+			easynormalhard();
+		}
+		else if (a == 50)
+		{
 			exit(0);
-			break;
-		default:
+		}
+		else
+		{
 			if (a >= 50 && a < 100)
 			{
 				Randomtlqkf();
@@ -274,6 +333,7 @@ void Startprint()
 			a++;
 			continue;
 		}
+
 		break;
 	}
 }
@@ -282,11 +342,20 @@ void Story()
 	system("mode con: cols=100 lines=20");
 	system("cls");
 	Sleep(3000);
-	cout << "여긴 어디지....??" << endl;
-	Sleep(1300);
-	cout << "그리고 도대체 내가 여기 왜 있는거지?? 여긴 어디야 도대체 !!" << endl;
+	cout << "여긴 어디지....?? " << endl;
+	Sleep(1000);
+	cout << "윽...." << endl;
+	Sleep(1000);
+	cout << "기억을 해보자... 난 가족들이랑 비행기 여행을 가고 있었지 근데 갑자기 비행기가 격추되었고..... " << endl;
+	Sleep(2000);
+	cout << "난 바다로 떨어졌지..... " << endl;
+	Sleep(1000);
+	cout << "그후에는 기억이 없다...." << endl;
+	Sleep(1500);
+	cout << "그리고 도대체 내가 여기 왜 있는거지?? 여긴 어디고 또 가족들은 대체 어딧는거야 !!" << endl;
+	Sleep(2000);
 	cout << "주위를 살펴본다";
-	Sleep(700);
+	Sleep(1000);
 	cout << "(아무키나 누르세요)" << endl;
 	int a = _getch();
 	if (a == 93) // ]키
@@ -305,18 +374,20 @@ void Story()
 #pragma region Asituation
 void ASituation()
 {
+	int b = 0;
 	int a = 0;
 	int eat;
 	Sleep(1000);
-	cout << "아 배고프다 어디 먹을거 없나........" << endl;
-	Sleep(1500);
-	cout << "앞에 먹을거로 보이는 것이 있다 가보자 " << endl;
+	cout << " 일단 먹을거부터 찾아봐야될거 같은데....." << endl;
+	Sleep(2000);
+	cout << "앞쪽에 먹을 수 있는 것처럼 보이는 것들이 있다" << endl;
 	Sleep(2000);
 	cout << "음 뭔가 이상하게 생겼는데 이게 뭐지 ,,,,? " << endl;
 	Sleep(1300);
+	cout << "살아서는 한번도 못본 음식인데..." << endl;
 	while (true)
 	{
-		int b = rand() % 10;
+		b = rand() % 10;
 		cout << "1: 먹는다 2: 먹지 않는다";
 		if (FindItem("무인도에서 살아남기 책"))
 		{
@@ -334,15 +405,18 @@ void ASituation()
 			Sleep(1500);
 			if (0 <= b && b <= 5)
 			{
-				Stringtochar(80, "윽.. 뭐지... 먹을 것에 독이 들어있었다 (HP -1)");
+				cout << "윽.. 배가 아프다" << endl;
+				Sleep(2000);
+				Stringtochar(80, "먹을 것에 독이 들어있었다 (HP -1)");
 				hp--;
 			}
-			else if (6 <= b)
+			else
 			{
-				Stringtochar(80, "음 맛있다 ㅎㅎ(HP + 1)");
+				cout << "오 뭐야 이거 생각보다 맛있는데?? 우리나라에 팔면 대박나겠어" << endl;
+				Sleep(1500);
+				Stringtochar(80, "당신은 의외로 맛있는 먹거리를 찾은걸 만족합니다(HP + 1)");
 				hp++;
 			}
-			break;
 		}
 		else if (eat == 50)
 		{
@@ -582,6 +656,7 @@ void BSituation()
 							Stringtochar(70, "다행히 아무일도 없었습니다....(HP 변화없음)");
 						}
 					}
+					break;
 
 				}
 				else
@@ -602,11 +677,13 @@ void BSituation()
 					continue;
 				}
 			}
+			break;
 		}
 		else if (c == 50)
 		{
 			int randomc50 = rand() % 10;
-			cout << "귀찮다 ;; 그래.... 까짓 뭔 일 있겠냐";
+			cout << "귀찮다 ;; 그래.... 까짓 뭔 일 있겠냐" << endl;
+			Sleep(2000);
 			if (0 <= randomc50 && randomc50 <= 6)
 			{
 				Stringtochar(70, "당신이 잠에든 사이 야생동물들이 와서 당신을 공격하였습니다(HP-1)");
@@ -620,10 +697,11 @@ void BSituation()
 		else if (c == 51 && FindItem("성냥"))
 		{
 
-			cout << "아 맞다 성냥이 있었지" << endl;
+			cout << "아 맞다 성냥이 있었지 !!" << endl;
 			Sleep(1500);
 			cout << "나는 성냥을 이용해 손쉽게 불을 피웠다" << endl;
 			Sleep(1500);
+			cout << "음 따뜻해 ㅎㅎ" << endl;
 			Stringtochar(70, "당신은 편하고 따뜻하게 밤을 보냈습니다 (HP+1)");
 			hp++;
 		}
@@ -688,7 +766,7 @@ void CSituation()
 	Sleep(1500);
 	while (true)
 	{
-		cout << "1: 참는다 2:옆에 있는 구정물을 마신다 ";
+		cout << "1: 참는다 2:옆에 있는 구정물을 마신다 " << endl;
 		Sleep(1500);
 		if (FindItem("물 1L"))
 		{
@@ -702,12 +780,11 @@ void CSituation()
 			else
 			{
 				Stringtochar(70, " 3: 물 1L(아이템) ");
-
 			}
 		}
 		else if (FindItem("무인도에서 살아남기 책"))
 		{
-			Stringtochar(70, " 4: 무인도에서 살아남기 책(아이템) ");
+			Stringtochar(70, " 4: 무인도에서 살아남기 책(아이템)");
 		}
 		int a = _getch();
 		if (a == 49)
@@ -983,9 +1060,11 @@ void DSituation()
 				cout << "나는 바로 실행에 옮겼다" << endl;
 				Sleep(2500);
 				cout << "읏쨔 다했다... 후 힘들다 비행기가 이쪽을 보는지 한번 볼까?!" << endl;
-				Sleep(1500);
+				Sleep(2500);
 				cout << "어.... 망했다" << endl;
+				Sleep(1500);
 				Stringtochar(70, "당신이 SOS모양을 만드는 사이 비행기는 지나가고 없었습니다.....");
+				Sleep(1000);
 			}
 			else
 			{
@@ -1006,7 +1085,7 @@ void DSituation()
 		break;
 	}
 	num++;
-	if (isSick)
+	if (isSick == true)
 	{
 		Issick();
 	}
@@ -1015,17 +1094,256 @@ void DSituation()
 #pragma endregion
 void Issick()
 {
+	system("cls");
+	int b = 0;
 	Sleep(2000);
 	cout << "저번에 먹은 물 때문에 식중독에 걸린 것 같다...." << endl;
 	Sleep(2000);
-	cout << "윽으으ㅡ 배가 너무 아프다 이러다 진짜 죽을거같은데 하.. 어카지 어떤 방법이 없을까" << endl;
+	cout << "윽으으ㅡ 배가 너무 아프다 이러다 진짜 죽을거같은데 하.. 어떡하지... 어떤 방법이 없을까..." << endl;
 	Sleep(2500);
 	while (true)
 	{
-
+		cout << "1: 그냥 참는다 " << endl;
+		if (FindItem("의약품"))
+		{
+			cout << "2: 의약품 (아이템)" << endl;
+		}
+		int a = _getch();
+		if (a == 49)
+		{
+			cout << "나는 나의 정신력을 믿고 버티기로 했고 잠을 청해보기로 했다" << endl;
+			Sleep(3000);
+			int random49 = rand() % 10;
+			if (0 <= random49 && random49 < 8)
+			{
+				cout << "나는 갑자기 극심한 고통을 느껴 잠이 깼다" << endl;
+				Sleep(2000);
+				cout << "머리가 깨질듯 아프다....호흡도 잘 안되기 시작했어,,,, " << endl;
+				Sleep(2000);
+				cout << "윽...ㅇ..ㅡ...이렇게 죽는건 아니겠지...? 살고싶어......" << endl;
+				Sleep(3000);
+				Stringtochar(70, "당신은 기생충에 감염되서 죽을고비를 넘겼습니다....(HP-2)");
+				hp -= 2;
+			}
+			else
+			{
+				cout << "오,,, 자고 일어났더니 정신이 말끔해졌다" << endl;
+				Sleep(2000);
+				Stringtochar(70, "당신은 운이좋게 식중독이 없어졌습니다");
+			}
+		}
+		else if (a == 50 && FindItem("의약품"))
+		{
+			cout << "난 가지고있던 의약품을 황급히 꺼내서 먹었다" << endl;
+			Sleep(2000);
+			cout << "흠..이게 효과가 있으려나.. 일단 좀만 기다려보자" << endl;
+			Sleep(3000);
+			cout << "오 하나도 안아픈데?? 지금 완전 풀컨디션이야 !! " << endl;
+			Sleep(2000);
+			Stringtochar(70, "당신은 약의 효능에 감탄하면서 잠에 들었습니다 (HP+1)");
+			hp++;
+		}
+		else
+		{
+			if (a >= 50 && a < 100)
+			{
+				Randomtlqkf();
+				a++;
+				continue;
+			}
+			else if (a == 100)
+			{
+				cout << "넌 걍 하지마라 ㅋㅋ";
+				exit(0);
+			}
+			Randomelse();
+			a++;
+			continue;
+		}
+		break;
 	}
 }
+#pragma region LastSiutation
+void LastSituation()
+{
+	int c = 0;
+	system("cls");
+	int b = 0;
+	cout << "어 저게 뭐지??" << endl;
+	Sleep(1500);
+	cout << "저기에 배같은게 보이는데 ? 나는 그쪽으로 황급히 뛰어갔다" << endl;
+	Sleep(2000);
+	cout << "오...오 진짜 배다 배야 " << endl;
+	Sleep(1500);
+	cout << "빨리 이걸타고 한국으로 돌아가야겠어 !!!!" << endl;
+	Sleep(1500);
+	cout << "난 이성을 잃고 무작정 배를 타고 노를 젓기 시작했다..." << endl;
+	Sleep(3000);
+	cout << "헉 뭐지 내가 지금 뭐하는거야????" << endl;
+	Sleep(1000);
+	cout << "이성이 돌아왔을 때쯤 무인도는 실루엣만 보일 정도로 멀어졌다" << endl;
+	Sleep(2000);
+	cout << "헉 어떡하지 어느쪽으로 가야되지......일단 내가 남쪽에서 왔으니까 남쪽은 아닐테고 북쪽에서 선택해야되는데..하.. 어디로 가야하오.." << endl;
+	Sleep(2000);
+	while (1)
+	{
 
+		cout << "1: 북서쪽으로 간다 2: 북쪽으로 간다 3: 북동쪽으로 간다" << endl;
+		int b = _getch();
+		if (b == 49)
+		{
+			cout << "북서쪽으로 가는 것을 선택했다" << endl;
+			Sleep(1000);
+			cout << "나는 계속 북서쪽으로 노를 저었다  .. 팔이 저려왔지만 그래도 집을 갈 수 있다는 생각에 쉬지 않았다 " << endl;
+			Sleep(5000);
+			cout << "3시간쯤 노를 저었을때 나는 어떤 대륙에 도착했다 ..." << endl;
+			Sleep(2000);
+			cout << "나는 일단 주변에 보이는 마을로 뛰었다" << endl;
+			Sleep(2000);
+			cout << "헉....헉 ...... 너무 힘들다.... " << endl;
+			Sleep(2000);
+			cout << "난 주변에 있는 마을 주민분께 여기가 어디냐고 물어봤다" << endl;
+			Sleep(3000);
+			cout << "그분이 말하시는것을 듣고 난 좌절했다..." << endl;
+			Sleep(3000);
+			cout << "그분은 이렇게 말하셨다..." << endl;
+			Sleep(1000);
+			Stringtochar(70, "Anh ấy đang nói gì bây giờ??? ");
+			Stringtochar(70, "그렇다 여기는 베트남이었다....");
+			Die();
+		}
+		else if (b == 50)
+		{
+			cout << "나는 북쪽으로 가는것을 선택했다" << endl;
+			Sleep(1000);
+			cout << "나는 계속 북쪽으로 젓고있었다 하지만 무슨 이상한 낌새가 나타나고 있었다" << endl;
+			Sleep(2000);
 
+			cout << "아까부터 바람이 내쪽으로 불고 있었다 흠 여기로 계속 가는게 맞을까?" << endl;
+			Sleep(1500);
+			while (true)
+			{
+				cout << "1:북서쪽으로 간다 2: 계속 북쪽으로 간다 3: 북동쪽으로 간다" << endl;
+				int b = _getch();
+				if (b == 49)
+				{
+					cout << "나는 방향을 바꿔 북서쪽으로 가는 것을 선택했다" << endl;
+					Sleep(1000);
+					cout << "난 북쪽에서 토네이도가 휘몰아 치는 것을 보고 이쪽으로 잘 온거같다고 생각했다" << endl;
+					Sleep(2000);
+					cout << "나는 계속 북서쪽으로 노를 저었다  .. 팔이 저려왔지만 그래도 집을 갈 수 있다는 생각에 쉬지 않았다 " << endl;
+					Sleep(5000);
+					cout << "3시간쯤 노를 저었을때 나는 어떤 대륙에 도착했다 ..." << endl;
+					Sleep(2000);
+					cout << "나는 일단 주변에 보이는 마을로 뛰었다" << endl;
+					Sleep(2000);
+					cout << "헉....헉 ...... 너무 힘들다.... " << endl;
+					Sleep(2000);
+					cout << "난 주변에 있는 마을 주민분께 여기가 어디냐고 물어봤다" << endl;
+					Sleep(3000);
+					cout << "그분이 말하시는것을 듣고 난 좌절했다..." << endl;
+					Sleep(3000);
+					cout << "그분은 이렇게 말하셨다..." << endl;
+					Sleep(1000);
+					Stringtochar(70, "他现在在说什么?? ");
+					Stringtochar(70, "그렇다 여기는 대만이었다....(게임 오버)");
+					Sleep(2000);
+					Die();
+				}
+				else if (b == 50)
+				{
+					cout << "나는 그냥 계속 북쪽으로 가는것을 선택했다.." << endl;
+					Sleep(2000);
+					cout << "10분쯤 계속 북쪽으로 가는데 앞쪽에서 토네이도 휘몰아 쳤다" << endl;
+					Sleep(2000);
+					cout << "난 도망칠세도 없이 몸이 위로 뜨기 시작했다" << endl;
+					Sleep(3000);
+					cout << "그리고 상공 500미터까지 몸이 뜨고 그대로 아래로 떨어졌다..." << endl;
+					Stringtochar(70, "토네이도에 휘말려 죽었습니다(게임 오버)");
+					Die();
+				}
+				else if (b == 51)
+				{
+					cout << "나는 예감이 좋지 않아 북동쪽으로 가는 것을 선택했다" << endl;
+					Sleep(2000);
+					cout << "10분정도 뒤에 아까 왔던곳에 토네이도가 휘몰아 치는 것을 보고 나의 선택에 정말 감격했다" << endl;
+					Sleep(1000);
+					cout << "나는 계속 북동쪽으로 노를 저었다...." << endl;
+					Sleep(3000);
+					cout << "3시간쯤 걸렸을때 땅이 보이기 시작했다 난 더욱 빨리 노를 저었다" << endl;
+					Sleep(2000);
+					cout << "드디어 땅에 발을 딛었고 가까운 마을로 달리기 시작했다" << endl;
+					Sleep(3000);
+					cout << "그리고 그 표지판에 부산광역시라는 팻말을 봤다" << endl;
+					Sleep(2000);
+					cout << "드디어 한국에 한국에 왔구나 !!!!!! 거기서 죽는줄 알았어....." << endl;
+					Sleep(1000);
+					Stringtochar(70, "부산광역시에 도착하셨습니다 탈출 성공");
+					Escape();
+				}
+				else
+				{
+					if (b >= 50 && b < 100)
+					{
+						Randomtlqkf();
+						b++;
+						continue;
+					}
+					else if (b == 100)
+					{
+						cout << "넌 걍 하지마라 ㅋㅋ";
+						exit(0);
+					}
+					Randomelse();
+					b++;
+					continue;
+				}
+				break;
+			}
+		}
+		else if (b == 51)
+		{
+			cout << "나는 순간적인 뇌지컬로 북동쪽으로 가야된다고 생각했다" << endl;
+			Sleep(2000);
+			cout << "나는 필리핀으로 여행을 가고있었으니 한국에서 필리핀은 한국에서 반대쪽이다 즉 남서쪽의 반대인 북동쪽으로 가면 된다는 말이다" << endl;
+			Sleep(3000);
+			cout << "이대로 가면 한국에 도착할수 있겠지.....?" << endl;
+			Sleep(2000);
+			cout << "나는 계속 북동쪽으로 노를 저었다...." << endl;
+			Sleep(3000);
+			cout << "3시간쯤 걸렸을때 땅이 보이기 시작했다 난 더욱 빨리 노를 저었다" << endl;
+			Sleep(2000);
+			cout << "드디어 땅에 발을 딛었고 가까운 마을로 달리기 시작했다" << endl;
+			Sleep(3000);
+			cout << "그리고 그 표지판에 부산광역시라는 팻말을 봤다" << endl;
+			Sleep(2000);
+			cout << "드디어 한국에 한국에 왔구나 !!!!!! 거기서 죽는줄 알았어....." << endl;
+			Sleep(1000);
+			Stringtochar(70, "부산광역시에 도착하셨습니다 탈출 성공");
+			Escape();
+		}
 
+		else
+		{
+			if (c >= 50 && c < 100)
+			{
+				Randomtlqkf();
+				c++;
+				continue;
+			}
+			else if (c == 100)
+			{
+				cout << "넌 걍 하지마라 ㅋㅋ";
+				exit(0);
+			}
+			Randomelse();
+			c++;
+			continue;
+		}
 
+		break;
+	}
+
+}
+
+#pragma endregion
